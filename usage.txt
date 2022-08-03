@@ -1,0 +1,18 @@
+call trainProcess function in trainprocess.py
+as 
+trainProcess(riverDataset, "water_v2", "river_train.npy", [0, 1500], [1950, 2150], "model_1")
+trainProcess(riverDataset, "water_v2", "river_train.npy", [0, 1500], [1950, 2150], "scibble_model")
+
+"water_v2" for folder that contains files, download from https://www.kaggle.com/datasets/gvclsu/water-segmentation-dataset/download?datasetVersionNumber=4
+
+"river_train.npy" is the name list for all images
+[0, 1500] is the training range: use image from #0 to # 1500 in name list as train set
+[1950, 2150] is the validating range: use image from #1950 to #2150 in name list as valid set
+"model_1" is the saved model name 
+
+you could search "NEED CHANGE" to find place that needs to change
+
+although I include create_scribble function in trainprocess.py, it does take long time to create scribble, 
+you might want to generate scribble and save it some place. you could find scribble_gen to do so
+
+model.py is the U-Net from github https://github.com/jaxony/unet-pytorch/blob/master/model.py
