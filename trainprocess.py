@@ -573,34 +573,38 @@ def create_scribble(mask):
             for i in poly_tri: # go through each triangles
                 bg = np.zeros((mask.shape))
                 adj_point= get_adjacent_points(i,poly_tri)
-                # if only one shared side, connect mid point of this side and the other point, which is an apex of polygon
-                if len(adj_point) == 1:
-                    adj_point = adj_point[0]
-                    apex = np.vstack((middle_pts(adj_point), other_pts(adj_point, i))).astype(int)
-                    cv2.polylines(bg, [apex], 0, 1)
-                    im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
-                # if one sides are shared, connect their mid points
-                elif len(adj_point) == 2:
-                    apex = np.vstack((middle_pts(adj_point[0]), middle_pts(adj_point[1]))).astype(int)
-                    cv2.polylines(bg, [apex], 0, 1)
-                    im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
-                # otherwise, this triangle is in the middle of polygon (three shared sides)
-                # connect all mid pts
-                else:
-                    assert(len(adj_point) == 3)
-                    m1 = middle_pts(adj_point[0])
-                    m2 = middle_pts(adj_point[1])
-                    m3 = middle_pts(adj_point[2])
-                    m12 = middle_pts([m1,m2])
-                    apex = np.vstack((m1,m2))
-                    cv2.polylines(bg, [apex], 0, 1)
-                    im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
-                    apex = np.vstack((m12,m3))
-                    cv2.polylines(bg, [apex], 0, 1)
-                    im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
+                if len(adj_point)>0:
+                    # if only one shared side, connect mid point of this side and the other point, which is an apex of polygon
+                    if len(adj_point) == 1:
+                        adj_point = adj_point[0]
+                        apex = np.vstack((middle_pts(adj_point), other_pts(adj_point, i))).astype(int)
+                        cv2.polylines(bg, [apex], 0, 1)
+                        im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
+                    # if one sides are shared, connect their mid points
+                    elif len(adj_point) == 2:
+                        apex = np.vstack((middle_pts(adj_point[0]), middle_pts(adj_point[1]))).astype(int)
+                        cv2.polylines(bg, [apex], 0, 1)
+                        im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
+                    # otherwise, this triangle is in the middle of polygon (three shared sides)
+                    # connect all mid pts
+                    else:
+                        assert(len(adj_point) == 3)
+                        m1 = middle_pts(adj_point[0])
+                        m2 = middle_pts(adj_point[1])
+                        m3 = middle_pts(adj_point[2])
+                        m12 = middle_pts([m1,m2])
+                        apex = np.vstack((m1,m2))
+                        cv2.polylines(bg, [apex], 0, 1)
+                        im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
+                        apex = np.vstack((m12,m3))
+                        cv2.polylines(bg, [apex], 0, 1)
+                        im_list.append(cv2.dilate(bg,np.ones((3,3)), iterations = 4))
     # get each part together
-    t = im_list[0].astype(np.int).flatten()
-    for i in range(1,len(im_list)):
-        t = np.bitwise_or(t, im_list[i].astype(np.int).flatten())
-    t = t.reshape((mask.shape)) 
+    if len(im_list)>0:
+        t = im_list[0].astype(np.int64).flatten()
+        for i in range(1,len(im_list)):
+            t = np.bitwise_or(t, im_list[i].astype(np.int64).flatten())
+        t = t.reshape((mask.shape)) 
+    else:
+        t = mask   
     return t
