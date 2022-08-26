@@ -240,7 +240,7 @@ def create_box(mask):
 # filter generator
 def create_filter(mask, ksize):
     # ksize: kernal size
-    # default to run 10 times, can be changed
+    # default to run 10 times, may NEED CHANGE
     mask = Image.fromarray(mask).resize((256,256))
     x = cv2.cvtColor(np.asarray(mask.convert('RGB')).astype(np.uint8), cv2.COLOR_RGB2BGR)
     mask = cv2.cvtColor(x, cv2.COLOR_BGR2GRAY)
