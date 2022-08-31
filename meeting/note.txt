@@ -1,0 +1,4 @@
+coco file is my reporting when using coco dataset
+current is reports for current used four datasets
+the reason for changing dataset is that I found coco dataset is not very accurate
+the IoU between coco provided masks and Maciej's annotation is around 0.8, thus, Maciej thought it was unacceptable
